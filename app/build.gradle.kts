@@ -23,8 +23,6 @@ android {
         versionCode = 21
         versionName = "1.1.8"
 
-        multiDexEnabled = true
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -79,7 +77,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.work.runtime.ktx)
@@ -89,7 +86,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.protobuf)
 
     //lifecycle
-    implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -130,7 +126,7 @@ dependencies {
     androidTestImplementation(libs.junit5.android.core)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.kotest.assertions.core)
-    testRuntimeOnly(libs.junit5.android.runner)
+    androidTestRuntimeOnly(libs.junit5.android.runner)
     //test coroutines
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)

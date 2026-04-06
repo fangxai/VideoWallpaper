@@ -41,8 +41,6 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
     //hilt
     implementation(libs.androidx.hilt.common)
@@ -58,9 +56,11 @@ dependencies {
     testImplementation(platform(libs.junit5.bom))
     testImplementation(libs.junit5.api)
     testImplementation(libs.kotest.assertions.core)
+    testRuntimeOnly(libs.junit5.engine)
     androidTestImplementation(libs.kotest.assertions.core)
     androidTestImplementation(libs.junit5.api)
     androidTestImplementation(libs.junit5.android.core)
+    androidTestRuntimeOnly(libs.junit5.android.runner)
 
     implementation(project(":core:common"))
 }

@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.junit5)
 }
 
@@ -29,6 +28,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    testOptions {
+        unitTests {
+            unitTests.all {
+                it.useJUnitPlatform()
+            }
+        }
+    }
 }
 
 kotlin {
@@ -39,15 +46,14 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
     //testing
     testImplementation(platform(libs.junit5.bom))
     testImplementation(libs.junit5.api)
     testImplementation(libs.kotest.assertions.core)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    testRuntimeOnly(libs.junit5.engine)
     androidTestImplementation(libs.kotest.assertions.core)
     androidTestImplementation(libs.junit5.api)
     androidTestImplementation(libs.junit5.android.core)
+    androidTestRuntimeOnly(libs.junit5.android.runner)
 }
