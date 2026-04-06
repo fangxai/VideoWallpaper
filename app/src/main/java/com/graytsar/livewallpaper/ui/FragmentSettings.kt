@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
@@ -32,6 +33,7 @@ class FragmentSettings : Fragment() {
     lateinit var autoCompleteVideoScaling: MaterialAutoCompleteTextView
     lateinit var switchDoubleTapToPause: MaterialSwitch
     lateinit var switchPlayOffscreen: MaterialSwitch
+    lateinit var clearWallpapersButton: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +49,7 @@ class FragmentSettings : Fragment() {
             this@FragmentSettings.autoCompleteVideoScaling = this.autoCompleteVideoScaling
             this@FragmentSettings.switchDoubleTapToPause = this.switchDoubleTapToPause
             this@FragmentSettings.switchPlayOffscreen = this.switchPlayOffscreen
+            this@FragmentSettings.clearWallpapersButton = this.buttonClearWallpaper
         }.root
     }
 
@@ -144,6 +147,10 @@ class FragmentSettings : Fragment() {
                     viewModel.userPreferencesRepository.setPlayOffscreen(isChecked)
                 }
             }
+        }
+
+        clearWallpapersButton.setOnClickListener {
+            viewModel.wallpaperManager.clear()
         }
     }
 
