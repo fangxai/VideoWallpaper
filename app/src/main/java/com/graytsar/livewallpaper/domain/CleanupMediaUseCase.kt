@@ -13,15 +13,14 @@ class CleanupMediaUseCase @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository
 ) {
     suspend operator fun invoke(newPreviewPath: String) = withContext(Dispatchers.IO) {
-        val activePath = userPreferencesRepository.getWallpaperPath()
+        val wallpaperPaths = (userPreferencesRepository.getWallpaperPath() + newPreviewPath).toSet()
 
         listOf(
             Util.getImageImportDirectory(context),
             Util.getVideoImportDirectory(context)
-        ).forEach { dir ->
-            dir.walk().filter { !it.isDirectory }.forEach { file ->
-                val filePath = file.path
-                if (filePath != activePath && filePath != newPreviewPath) {
+        ).forEach { directory ->
+            directory.listFiles()?.forEach { file ->
+                if (file.isFile && file.path !in wallpaperPaths) {
                     file.delete()
                 }
             }

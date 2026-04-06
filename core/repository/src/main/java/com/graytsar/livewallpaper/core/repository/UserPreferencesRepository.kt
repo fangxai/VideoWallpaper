@@ -78,7 +78,7 @@ class UserPreferencesRepository(
 
 
     suspend fun getWallpaperPath() = dataStore.data.map {
-        it.livePreference.firstOrNull()?.path
+        (it.livePreference.map { preference -> preference.path } + it.previewPreference.path).filterNotNull()
     }.first()
 
 

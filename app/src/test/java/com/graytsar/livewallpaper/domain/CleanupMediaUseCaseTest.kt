@@ -33,12 +33,44 @@ class CleanupMediaUseCaseTest {
         staleImage.writeText("stale-image")
         newPreviewVideo.writeText("preview")
         staleVideo.writeText("stale-video")
-        coEvery { userPreferencesRepository.getWallpaperPath() } returns activeImage.path
+        coEvery { userPreferencesRepository.getWallpaperPath() } returns listOf(activeImage.path)
 
         CleanupMediaUseCase(createContext(filesDir), userPreferencesRepository)(newPreviewVideo.path)
 
         activeImage.exists() shouldBe true
         newPreviewVideo.exists() shouldBe true
+        staleImage.exists() shouldBe false
+        staleVideo.exists() shouldBe false
+        imageDir.isDirectory shouldBe true
+        videoDir.isDirectory shouldBe true
+    }
+
+    @Test
+    fun `invoke keeps active video, image and preview while deleting stale imports`() = runTest {
+        val filesDir = tempDir.toFile()
+        val imageDir = Util.getImageImportDirectory(createContext(filesDir))
+        val videoDir = Util.getVideoImportDirectory(createContext(filesDir))
+        val activeImage = imageDir.resolve("active-image")
+        val activeVideo = imageDir.resolve("active-video")
+        val previewVideo = imageDir.resolve("preview-video")
+        val staleImage = imageDir.resolve("stale-image")
+        val staleVideo = videoDir.resolve("stale-video")
+
+        activeImage.writeText("active-image")
+        activeVideo.writeText("active-video")
+        previewVideo.writeText("preview-video")
+        staleImage.writeText("stale-image")
+        staleVideo.writeText("stale-video")
+        coEvery { userPreferencesRepository.getWallpaperPath() } returns listOf(
+            activeImage.path,
+            activeVideo.path,
+            previewVideo.path
+        )
+
+        CleanupMediaUseCase(createContext(filesDir), userPreferencesRepository)(previewVideo.path)
+
+        activeImage.exists() shouldBe true
+        previewVideo.exists() shouldBe true
         staleImage.exists() shouldBe false
         staleVideo.exists() shouldBe false
         imageDir.isDirectory shouldBe true
@@ -57,7 +89,7 @@ class CleanupMediaUseCaseTest {
         previewImage.writeText("preview")
         staleImage.writeText("stale-image")
         staleVideo.writeText("stale-video")
-        coEvery { userPreferencesRepository.getWallpaperPath() } returns null
+        coEvery { userPreferencesRepository.getWallpaperPath() } returns emptyList()
 
         CleanupMediaUseCase(createContext(filesDir), userPreferencesRepository)(previewImage.path)
 
