@@ -7,11 +7,14 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.android.junit5)
 }
 
 android {
     namespace = "com.graytsar.livewallpaper"
-    compileSdk = 36
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "com.graytsar.livewallpaper"
@@ -19,8 +22,6 @@ android {
         targetSdk = 36
         versionCode = 21
         versionName = "1.1.8"
-
-        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,6 +52,14 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    testOptions {
+        unitTests {
+            unitTests.all {
+                it.useJUnitPlatform()
+            }
+        }
+    }
 }
 
 kotlin {
@@ -68,7 +77,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.work.runtime.ktx)
@@ -77,9 +85,7 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.serialization.protobuf)
 
-
     //lifecycle
-    implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -108,7 +114,25 @@ dependencies {
     implementation(libs.arrow.kt)
 
     //test
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
+    testImplementation(platform(libs.junit5.bom))
+    testImplementation(libs.junit5.api)
+    testRuntimeOnly(libs.junit5.engine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotest.assertions.core)
+    //test instrumented
     androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.androidx.test.espresso.intents)
+    androidTestImplementation(libs.junit5.api)
+    androidTestImplementation(libs.junit5.android.core)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.kotest.assertions.core)
+    androidTestRuntimeOnly(libs.junit5.android.runner)
+    //test coroutines
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
+
+    implementation(project(":core:common"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:repository"))
 }

@@ -7,30 +7,41 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.graytsar.livewallpaper.core.common.model.ImageEngineSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import java.io.IOException
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 @RequiresApi(Build.VERSION_CODES.P)
 class Api28ImageRenderer(
     holder: SurfaceHolder,
     file: File,
-    settings: EngineSettings
+    settings: ImageEngineSettings
 ) : BaseImageRenderer(holder, file, settings) {
     private var animatedImageDrawable: Drawable? = null
 
     override fun loadContent(file: File) {
         val source = ImageDecoder.createSource(file)
-        animatedImageDrawable = runBlocking(Dispatchers.IO) {
-            ImageDecoder.decodeDrawable(source)
+        try {
+            animatedImageDrawable = runBlocking(Dispatchers.IO) {
+                ImageDecoder.decodeDrawable(source) { decoder, info, _ ->
+                    decoder.allocator = ImageDecoder.ALLOCATOR_HARDWARE
+                }
+            }
+            startAnimationIfNeeded()
+        } catch (e: IOException) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            cleanupContent()
         }
-
-        startAnimationIfNeeded()
     }
 
-    override fun onImageVisibilityChanged(visible: Boolean) {
+    override fun onPlaybackStateChanged(isPlaying: Boolean) {
         val animation = animatedImageDrawable as? AnimatedImageDrawable ?: return
-        if (visible) {
+        if (isPlaying) {
             animation.repeatCount = AnimatedImageDrawable.REPEAT_INFINITE
             animation.start()
         } else {
@@ -38,37 +49,52 @@ class Api28ImageRenderer(
         }
     }
 
-    override fun drawOriginal(canvas: Canvas) {
-        animatedImageDrawable?.draw(canvas)
-    }
+    override fun drawFitCrop(canvas: Canvas) {
+        animatedImageDrawable?.apply {
+            val drawableWidth = intrinsicWidth
+            val drawableHeight = intrinsicHeight
+            if (drawableWidth <= 0 || drawableHeight <= 0) return@apply
 
-    override fun drawCenter(canvas: Canvas) {
-        animatedImageDrawable?.let { drawable ->
-            val sx = (canvas.width.toFloat() - drawable.intrinsicWidth.toFloat()) / 2
-            val sy = (canvas.height.toFloat() - drawable.intrinsicHeight.toFloat()) / 2
+            val scale = max(
+                canvas.width.toFloat() / drawableWidth.toFloat(),
+                canvas.height.toFloat() / drawableHeight.toFloat()
+            )
+            val scaledWidth = (drawableWidth * scale).roundToInt()
+            val scaledHeight = (drawableHeight * scale).roundToInt()
+            val left = ((canvas.width - scaledWidth) / 2f).roundToInt()
+            val top = ((canvas.height - scaledHeight) / 2f).roundToInt()
 
-            canvas.translate(sx, sy)
-            drawable.draw(canvas)
+            setBounds(left, top, left + scaledWidth, top + scaledHeight)
+            draw(canvas)
         }
     }
 
-    override fun drawFit(canvas: Canvas) {
-        animatedImageDrawable?.let { drawable ->
-            var ax = drawable.intrinsicWidth.toFloat()
-            var ay = drawable.intrinsicHeight.toFloat()
+    override fun drawFitToScreen(canvas: Canvas) {
+        animatedImageDrawable?.apply {
+            setBounds(0, 0, canvas.width, canvas.height)
+            draw(canvas)
+        }
+    }
 
-            if (ax <= 0) {
-                ax = 1.0f
-            }
-            if (ay <= 0) {
-                ay = 1.0f
-            }
+    override fun drawCenter(canvas: Canvas) {
+        animatedImageDrawable?.apply {
+            val iw = intrinsicWidth.coerceAtLeast(0)
+            val ih = intrinsicHeight.coerceAtLeast(0)
 
-            val sx = canvas.width.toFloat() / ax
-            val sy = canvas.height.toFloat() / ay
+            val left = (canvas.width - iw) / 2
+            val top = (canvas.height - ih) / 2
 
-            canvas.scale(sx, sy)
-            drawable.draw(canvas)
+            setBounds(left, top, left + iw, top + ih)
+            draw(canvas)
+        }
+    }
+
+    override fun drawOriginal(canvas: Canvas) {
+        animatedImageDrawable?.apply {
+            val width = intrinsicWidth.coerceAtLeast(0)
+            val height = intrinsicHeight.coerceAtLeast(0)
+            setBounds(0, 0, width, height)
+            draw(canvas)
         }
     }
 
