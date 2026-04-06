@@ -236,10 +236,10 @@ class VideoWallpaperService : WallpaperService() {
             }
 
             runCatching {
-                val isActuallyPlaying = player.isPlaying
-
-                if (shouldPlay && !isActuallyPlaying) {
-                    player.start()
+                if (shouldPlay) {
+                    if (!player.isPlaying) {
+                        player.start()
+                    }
                 } else if (player.isPlaying) {
                     player.pause()
                 }
