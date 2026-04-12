@@ -29,7 +29,7 @@ class Api28ImageRenderer(
         try {
             animatedImageDrawable = runBlocking(Dispatchers.IO) {
                 ImageDecoder.decodeDrawable(source) { decoder, info, _ ->
-                    decoder.allocator = ImageDecoder.ALLOCATOR_HARDWARE
+                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
                 }
             }
             startAnimationIfNeeded()

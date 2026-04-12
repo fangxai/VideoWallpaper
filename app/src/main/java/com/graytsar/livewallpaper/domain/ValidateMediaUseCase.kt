@@ -11,6 +11,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ValidateMediaUseCase @Inject constructor(
@@ -20,7 +22,9 @@ class ValidateMediaUseCase @Inject constructor(
     suspend fun validateVideo(uri: Uri): Boolean {
         val retriever = MediaMetadataRetriever()
         return try {
-            retriever.setDataSource(context, uri)
+            withContext(Dispatchers.IO) {
+                retriever.setDataSource(context, uri)
+            }
             // Check if the file actually contains a video track
             val hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)
             hasVideo != null
@@ -33,10 +37,12 @@ class ValidateMediaUseCase @Inject constructor(
     }
 
     suspend fun validateImage(uri: Uri): Boolean {
-        return if (Build.VERSION.SDK_INT >= 28) {
-            validateImageNew(uri)
-        } else {
-            validateImageLegacy(uri)
+        return withContext(Dispatchers.IO) {
+            if (Build.VERSION.SDK_INT >= 28) {
+                validateImageNew(uri)
+            } else {
+                validateImageLegacy(uri)
+            }
         }
     }
 

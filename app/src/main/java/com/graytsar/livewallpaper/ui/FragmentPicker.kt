@@ -44,12 +44,33 @@ class FragmentPicker : Fragment() {
 
     private val videoLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            uri?.let { viewModel.onMediaSelected(it, WallpaperType.VIDEO) }
+            uri?.let {
+                runCatching {
+                    requireContext().contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                }.onFailure { error ->
+                    FirebaseCrashlytics.getInstance().recordException(error)
+                }
+
+                viewModel.onMediaSelected(it, WallpaperType.VIDEO)
+            }
         }
 
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            uri?.let { viewModel.onMediaSelected(it, WallpaperType.IMAGE) }
+            uri?.let {
+                runCatching {
+                    requireContext().contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                }.onFailure { error ->
+                    FirebaseCrashlytics.getInstance().recordException(error)
+                }
+                viewModel.onMediaSelected(it, WallpaperType.IMAGE)
+            }
         }
 
     override fun onCreateView(
@@ -112,7 +133,6 @@ class FragmentPicker : Fragment() {
             })
         } catch (e: ActivityNotFoundException) {
             Snackbar.make(requireView(), "could not set wallpaper", Snackbar.LENGTH_SHORT).show()
-            FirebaseCrashlytics.getInstance().recordException(e)
         }
     }
 
