@@ -9,7 +9,6 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,8 +27,7 @@ class ValidateMediaUseCase @Inject constructor(
             // Check if the file actually contains a video track
             val hasVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)
             hasVideo != null
-        } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+        } catch (_: Exception) {
             false
         } finally {
             runCatching { retriever.release() }

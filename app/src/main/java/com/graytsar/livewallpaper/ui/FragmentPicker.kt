@@ -51,7 +51,10 @@ class FragmentPicker : Fragment() {
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
                 }.onFailure { error ->
-                    FirebaseCrashlytics.getInstance().recordException(error)
+                    when (error) {
+                        is SecurityException -> Unit
+                        else -> FirebaseCrashlytics.getInstance().recordException(error)
+                    }
                 }
 
                 viewModel.onMediaSelected(it, WallpaperType.VIDEO)
@@ -67,7 +70,10 @@ class FragmentPicker : Fragment() {
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
                 }.onFailure { error ->
-                    FirebaseCrashlytics.getInstance().recordException(error)
+                    when (error) {
+                        is SecurityException -> Unit
+                        else -> FirebaseCrashlytics.getInstance().recordException(error)
+                    }
                 }
                 viewModel.onMediaSelected(it, WallpaperType.IMAGE)
             }

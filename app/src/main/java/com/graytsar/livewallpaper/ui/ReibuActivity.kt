@@ -1,5 +1,6 @@
 package com.graytsar.livewallpaper.ui
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,10 @@ class ReibuActivity : AppCompatActivity() {
 
         val binding = ActivityRaibuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //TODO: create startup profiles
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+            supportFragmentManager.executePendingTransactions()
+        }
 
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)

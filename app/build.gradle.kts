@@ -20,8 +20,8 @@ android {
         applicationId = "com.graytsar.livewallpaper"
         minSdk = 23
         targetSdk = 36
-        versionCode = 23
-        versionName = "1.1.10"
+        versionCode = 24
+        versionName = "1.1.11"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,7 +35,6 @@ android {
         debug {
             isDebuggable = true
             isMinifyEnabled = false
-            isShrinkResources = false
         }
 
         release {
@@ -109,9 +108,6 @@ dependencies {
 
     //ads
     implementation(libs.play.services.ads)
-
-    //functional programming
-    implementation(libs.arrow.kt)
 
     //test
     testImplementation(platform(libs.junit5.bom))

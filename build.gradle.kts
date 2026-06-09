@@ -9,5 +9,6 @@ plugins {
 }
 
 tasks.register("clean", Delete::class) {
+    description = "clean build directory"
     delete(rootProject.layout.buildDirectory)
 }

@@ -1,8 +1,8 @@
 package com.graytsar.livewallpaper.service
 
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 //because onApplyWallpaper is not called
 var currentFlag = WallpaperFlag.SYSTEM
@@ -43,6 +44,8 @@ class VideoWallpaperService : WallpaperService() {
         private var observeJob: Job? = null
         private var renderer: WallpaperRenderer? = null
         private var engineSettings: VideoEngineSettings? = null
+        private var isSurfaceCreated = false
+        private var lastSelection: WallpaperSelection? = null
 
         private var isPaused: Boolean = false
         private var isVisibleToUser: Boolean = true
@@ -60,9 +63,14 @@ class VideoWallpaperService : WallpaperService() {
                 }
             })
 
-        @OptIn(FlowPreview::class)
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
+            startObserveJob()
+        }
+
+        @OptIn(FlowPreview::class)
+        private fun startObserveJob() {
+            observeJob?.cancel()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 currentFlag = WallpaperFlag.from(wallpaperFlags)
             }
@@ -77,16 +85,33 @@ class VideoWallpaperService : WallpaperService() {
                     )
                 ) { settings, selection ->
                     settings to selection
-                }.debounce(300L).collect { (settings, selection) ->
+                }.debounce(100.milliseconds).collect { (settings, selection) ->
                     engineSettings = settings
+                    lastSelection = selection
+
                     val shouldUpdate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                         selection?.flag == WallpaperFlag.from(wallpaperFlags)
                     } else true
-                    if (shouldUpdate) {
+
+                    if (shouldUpdate && isSurfaceCreated) {
                         handleUpdate(settings, selection)
                     }
                 }
             }
+        }
+
+        override fun onCommand(
+            action: String?,
+            x: Int,
+            y: Int,
+            z: Int,
+            extras: Bundle?,
+            resultRequested: Boolean
+        ): Bundle? {
+            if (action == "android.wallpaper.reapply") {
+                startObserveJob()
+            }
+            return super.onCommand(action, x, y, z, extras, resultRequested)
         }
 
         override fun onVisibilityChanged(visible: Boolean) {
@@ -100,7 +125,16 @@ class VideoWallpaperService : WallpaperService() {
             super.onTouchEvent(event)
         }
 
+        override fun onSurfaceCreated(holder: SurfaceHolder?) {
+            super.onSurfaceCreated(holder)
+            isSurfaceCreated = true
+            engineSettings?.let { settings ->
+                handleUpdate(settings, lastSelection)
+            }
+        }
+
         override fun onSurfaceDestroyed(holder: SurfaceHolder?) {
+            isSurfaceCreated = false
             releaseRenderer()
             super.onSurfaceDestroyed(holder)
         }
@@ -191,6 +225,9 @@ class VideoWallpaperService : WallpaperService() {
         }
 
         private fun createMediaPlayer() {
+            val surface = holder.surface
+            if (surface == null || !surface.isValid) return
+
             val videoScalingMode = when (settings.video.videoScaling) {
                 VideoScaling.FIT_CROP -> MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
                 VideoScaling.FIT_TO_SCREEN -> MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT
@@ -217,9 +254,11 @@ class VideoWallpaperService : WallpaperService() {
                     mediaPlayer = mp
                     release()
                 }
-                setSurface(holder.surface)
+                setSurface(surface)
                 isLooping = true
-                setDataSource(this@VideoWallpaperService, Uri.fromFile(file))
+                file.inputStream().use { inputStream ->
+                    setDataSource(inputStream.fd)
+                }
                 setVolume(volume, volume)
                 prepareAsync()
             }
@@ -244,11 +283,12 @@ class VideoWallpaperService : WallpaperService() {
                     player.pause()
                 }
             }.onFailure { error ->
-                FirebaseCrashlytics.getInstance().recordException(error)
-
-                //If the player is in an invalid state, release it so it can be recreated
-                if (error is IllegalStateException) {
-                    release()
+                when (error) {
+                    is IllegalStateException -> release()
+                    else -> {
+                        FirebaseCrashlytics.getInstance().recordException(error)
+                        release()
+                    }
                 }
             }
         }

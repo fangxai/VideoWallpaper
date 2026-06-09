@@ -2,7 +2,6 @@ package com.graytsar.livewallpaper.engine
 
 import android.graphics.Canvas
 import android.graphics.Color
-import android.util.Log
 import android.view.SurfaceHolder
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.graytsar.livewallpaper.core.common.model.ImageEngineSettings
@@ -18,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import kotlin.time.Duration.Companion.milliseconds
 
 abstract class BaseImageRenderer(
     private val holder: SurfaceHolder,
@@ -137,27 +137,28 @@ abstract class BaseImageRenderer(
                     if (!isPaused) {
                         drawFrame()
                     }
-                    delay(16)
+                    delay(16.milliseconds)
                 }
             } catch (e: CancellationException) {
                 //expected when stopping the drawing loop, no need to log
             } catch (e: Exception) {
-                Log.e("ERROR", e.message.toString(), e)
                 FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
 
     private fun drawFrame() {
-        val canvas = try {
+        val canvas: Canvas? = try {
             holder.lockCanvas()
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().recordException(e)
             return
         }
-        //reset canvas state
-        canvas.drawColor(Color.BLACK)
+        if (canvas == null) return
+
         try {
+            //reset canvas state
+            canvas.drawColor(Color.BLACK)
             when (settings.image.scaleType) {
                 ImageScaling.FIT_CROP -> drawFitCrop(canvas)
                 ImageScaling.FIT_TO_SCREEN -> drawFitToScreen(canvas)
