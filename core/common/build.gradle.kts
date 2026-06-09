@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.android.junit5)
+    alias(libs.plugins.android.junit6)
 }
 
 android {
@@ -48,12 +48,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     //testing
-    testImplementation(platform(libs.junit5.bom))
-    testImplementation(libs.junit5.api)
+    testImplementation(platform(libs.junit6.bom))
+    testImplementation(libs.junit6.api)
     testImplementation(libs.kotest.assertions.core)
-    testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit6.engine)
     androidTestImplementation(libs.kotest.assertions.core)
-    androidTestImplementation(libs.junit5.api)
-    androidTestImplementation(libs.junit5.android.core)
-    androidTestRuntimeOnly(libs.junit5.android.runner)
+    androidTestImplementation(libs.junit6.api)
+    androidTestImplementation(libs.junit6.android.core)
+    androidTestRuntimeOnly(libs.junit6.android.runner)
 }

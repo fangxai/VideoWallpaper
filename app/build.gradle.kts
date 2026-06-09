@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.android.junit5)
+    alias(libs.plugins.android.junit6)
 }
 
 android {
@@ -110,19 +110,19 @@ dependencies {
     implementation(libs.play.services.ads)
 
     //test
-    testImplementation(platform(libs.junit5.bom))
-    testImplementation(libs.junit5.api)
-    testRuntimeOnly(libs.junit5.engine)
+    testImplementation(platform(libs.junit6.bom))
+    testImplementation(libs.junit6.api)
+    testRuntimeOnly(libs.junit6.engine)
     testImplementation(libs.mockk)
     testImplementation(libs.kotest.assertions.core)
     //test instrumented
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.espresso.intents)
-    androidTestImplementation(libs.junit5.api)
-    androidTestImplementation(libs.junit5.android.core)
+    androidTestImplementation(libs.junit6.api)
+    androidTestImplementation(libs.junit6.android.core)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.kotest.assertions.core)
-    androidTestRuntimeOnly(libs.junit5.android.runner)
+    androidTestRuntimeOnly(libs.junit6.android.runner)
     //test coroutines
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
