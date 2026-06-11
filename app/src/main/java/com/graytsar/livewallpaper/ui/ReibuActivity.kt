@@ -22,24 +22,35 @@ class ReibuActivity : AppCompatActivity() {
 
         val binding = ActivityRaibuBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //TODO: create startup profiles
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
-            supportFragmentManager.executePendingTransactions()
-        }
 
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentMain))
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
+            setupNav()
+        }
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         applyWindowInsets(binding.root)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
+            setupNav()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    private fun setupNav() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentMain))
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
     }
 }
