@@ -1,6 +1,5 @@
 package com.graytsar.livewallpaper.ui
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -26,31 +25,17 @@ class ReibuActivity : AppCompatActivity() {
         val toolbar: Toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
-            setupNav()
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentMain))
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         applyWindowInsets(binding.root)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
-            setupNav()
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    private fun setupNav() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentMain))
-
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
     }
 }

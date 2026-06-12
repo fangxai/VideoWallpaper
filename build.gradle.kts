@@ -6,9 +6,16 @@ plugins {
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.google.hilt) apply false
     alias(libs.plugins.android.junit6) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 tasks.register("clean", Delete::class) {
     description = "clean build directory"
     delete(rootProject.layout.buildDirectory)
+}
+
+buildscript {
+    dependencies {
+        classpath(libs.compose.buildscript)
+    }
 }
