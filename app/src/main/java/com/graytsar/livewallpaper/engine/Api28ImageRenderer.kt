@@ -4,9 +4,7 @@ import android.graphics.Canvas
 import android.graphics.ImageDecoder
 import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.view.SurfaceHolder
-import androidx.annotation.RequiresApi
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.graytsar.livewallpaper.core.common.model.ImageEngineSettings
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +14,6 @@ import java.io.IOException
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-@RequiresApi(Build.VERSION_CODES.P)
 class Api28ImageRenderer(
     holder: SurfaceHolder,
     file: File,

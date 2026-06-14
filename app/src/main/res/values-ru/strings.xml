@@ -20,4 +20,12 @@
     <string name="play_offscreen">Воспроизведение вне экрана</string>
     <string name="summery_play_offscreen">Воспроизведение, когда видео не видно или экран выключен</string>
     <string name="crop_video">Обрезать видео</string>
+
+    <string name="clear_wallpapers">Очистить обои</string>
+    <string name="no_video_picker_app_found_on_this_device">На этом устройстве не найдено приложение для выбора видео.</string>
+    <string name="no_image_picker_app_found_on_this_device">На этом устройстве не найдено приложение для выбора изображений.</string>
+    <string name="could_not_set_wallpaper">Не удалось установить обои</string>
+    <string name="back">Назад</string>
+    <string name="select_video_wallpaper">Выбрать видеообои</string>
+    <string name="select_image_wallpaper">Выбрать фотообои</string>
 </resources>

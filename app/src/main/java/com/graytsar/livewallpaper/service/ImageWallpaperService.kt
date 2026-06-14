@@ -3,7 +3,6 @@ package com.graytsar.livewallpaper.service
 import android.os.Build
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -13,7 +12,6 @@ import com.graytsar.livewallpaper.core.common.model.WallpaperServiceType
 import com.graytsar.livewallpaper.core.repository.UserPreferencesRepository
 import com.graytsar.livewallpaper.core.repository.WallpaperSelection
 import com.graytsar.livewallpaper.engine.Api28ImageRenderer
-import com.graytsar.livewallpaper.engine.LegacyImageRenderer
 import com.graytsar.livewallpaper.engine.WallpaperRenderer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -42,11 +40,7 @@ class ImageWallpaperService : WallpaperService() {
         file: File,
         settings: ImageEngineSettings
     ): WallpaperRenderer {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Api28ImageRenderer(holder, file, settings)
-        } else {
-            LegacyImageRenderer(holder, file, settings)
-        }
+        return Api28ImageRenderer(holder, file, settings)
     }
 
     @OptIn(FlowPreview::class)
@@ -84,7 +78,6 @@ class ImageWallpaperService : WallpaperService() {
             }
 
             observeJob = engineScope.launch {
-                Log.d("DBG", "$isPreview")
                 combine(
                     userPreferencesRepository.getImageEngineSettingsFlow(),
                     userPreferencesRepository.getWallpaperSelectionFlow(

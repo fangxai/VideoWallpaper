@@ -24,4 +24,12 @@
     <string name="play_offscreen">Play off screen</string>
     <string name="summery_play_offscreen">Play when not visible or screen is off</string>
     <string name="crop_video">Crop video</string>
+
+    <string name="clear_wallpapers">Clear wallpapers</string>
+    <string name="no_video_picker_app_found_on_this_device">No video picker app found on this device.</string>
+    <string name="no_image_picker_app_found_on_this_device">No image picker app found on this device.</string>
+    <string name="could_not_set_wallpaper">Could not set wallpaper</string>
+    <string name="back">Back</string>
+    <string name="select_video_wallpaper">Select a video wallpaper</string>
+    <string name="select_image_wallpaper">Select an image wallpaper</string>
 </resources>

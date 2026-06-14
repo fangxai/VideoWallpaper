@@ -20,4 +20,12 @@
     <string name="play_offscreen">화면 밖에서 재생</string>
     <string name="summery_play_offscreen">화면이 보이지 않거나 꺼져 있을 때 재생</string>
     <string name="crop_video">동영상 자르기</string>
+
+    <string name="clear_wallpapers">배경화면 지우기</string>
+    <string name="no_video_picker_app_found_on_this_device">이 기기에서 비디오 선택기 앱을 찾을 수 없습니다.</string>
+    <string name="no_image_picker_app_found_on_this_device">이 기기에서 이미지 선택기 앱을 찾을 수 없습니다.</string>
+    <string name="could_not_set_wallpaper">배경화면을 설정할 수 없습니다</string>
+    <string name="back">뒤로</string>
+    <string name="select_video_wallpaper">비디오 배경화면 선택</string>
+    <string name="select_image_wallpaper">이미지 배경화면 선택</string>
 </resources>

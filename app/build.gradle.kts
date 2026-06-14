@@ -8,18 +8,19 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.junit6)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.graytsar.livewallpaper"
     compileSdk {
-        version = release(36)
+        version = release(37)
     }
 
     defaultConfig {
         applicationId = "com.graytsar.livewallpaper"
-        minSdk = 23
-        targetSdk = 36
+        minSdk = 28
+        targetSdk = 37
         versionCode = 25
         versionName = "1.1.11"
 
@@ -49,7 +50,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        compose = true
     }
 
     testOptions {
@@ -79,6 +80,19 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     implementation(libs.androidx.work.runtime.ktx)
+
+    //compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.foundation.layout)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.hilt.navigation)
+    ksp(libs.kotlin.metadata.jvm)
 
     //datastore
     implementation(libs.androidx.datastore)
@@ -116,6 +130,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotest.assertions.core)
     //test instrumented
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.espresso.intents)
     androidTestImplementation(libs.junit6.api)

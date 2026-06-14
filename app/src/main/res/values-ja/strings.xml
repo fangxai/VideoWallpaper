@@ -20,4 +20,12 @@
     <string name="play_offscreen">画面外での再生</string>
     <string name="summery_play_offscreen">画面が表示されていないときや画面がオフのときに再生</string>
     <string name="crop_video">動画をトリミング</string>
+
+    <string name="clear_wallpapers">壁紙をクリア</string>
+    <string name="no_video_picker_app_found_on_this_device">このデバイスにビデオ選択アプリが見つかりません。</string>
+    <string name="no_image_picker_app_found_on_this_device">このデバイスに画像選択アプリが見つかりません。</string>
+    <string name="could_not_set_wallpaper">壁紙を設定できませんでした</string>
+    <string name="back">戻る</string>
+    <string name="select_video_wallpaper">ビデオ壁紙を選択</string>
+    <string name="select_image_wallpaper">画像壁紙を選択</string>
 </resources>

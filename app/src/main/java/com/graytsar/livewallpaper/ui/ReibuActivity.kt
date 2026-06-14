@@ -1,56 +1,79 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.graytsar.livewallpaper.ui
 
-import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import com.graytsar.livewallpaper.R
-import com.graytsar.livewallpaper.core.common.util.applyWindowInsets
-import com.graytsar.livewallpaper.databinding.ActivityRaibuBinding
+import androidx.activity.viewModels
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.graytsar.livewallpaper.navigation.PickerRoute
+import com.graytsar.livewallpaper.navigation.SettingsRoute
+import com.graytsar.livewallpaper.route.PickerScreenRoute
+import com.graytsar.livewallpaper.route.SettingsScreenRoute
+import com.graytsar.livewallpaper.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ReibuActivity : AppCompatActivity() {
+class ReibuActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
 
-        val binding = ActivityRaibuBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent {
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val toolbar: Toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1) {
-            setupNav()
-        }
-
-        applyWindowInsets(binding.root)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
-            setupNav()
+            AppTheme(darkTheme = uiState.isDarkModeEnabled) {
+                val navController = rememberNavController()
+                ReiActivityScreen(
+                    navController = navController
+                )
+            }
         }
     }
+}
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp() || super.onSupportNavigateUp()
+@Composable
+fun ReiActivityScreen(
+    navController: NavHostController
+) {
+    NavHost(
+        navController = navController,
+        startDestination = PickerRoute
+    ) {
+        composable<PickerRoute> {
+            PickerScreenRoute(
+                onSettingsClick = { navController.navigate(SettingsRoute) }
+            )
+        }
+
+        composable<SettingsRoute> {
+            SettingsScreenRoute(
+                onBackPress = { navController.popBackStack() }
+            )
+        }
     }
+}
 
-    private fun setupNav() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentMain))
-
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+@Preview
+@Composable
+fun ReiActivityScreenPreview() {
+    val navController = rememberNavController()
+    AppTheme {
+        ReiActivityScreen(
+            navController = navController
+        )
     }
 }
