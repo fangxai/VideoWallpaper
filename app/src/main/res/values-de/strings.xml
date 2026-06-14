@@ -20,4 +20,12 @@
     <string name="play_offscreen">Off-Screen abspielen</string>
     <string name="summery_play_offscreen">Spielen wenn nicht sichtabar oder Bildschirm ist aus</string>
     <string name="crop_video">Video zuschneiden</string>
+
+    <string name="clear_wallpapers">Wallpaper löschen</string>
+    <string name="no_video_picker_app_found_on_this_device">Keine Video-Auswahl-App auf diesem Gerät gefunden.</string>
+    <string name="no_image_picker_app_found_on_this_device">Keine Bild-Auswahl-App auf diesem Gerät gefunden.</string>
+    <string name="could_not_set_wallpaper">Wallpaper konnte nicht gesetzt werden</string>
+    <string name="back">Zurück</string>
+    <string name="select_video_wallpaper">Video Wallpaper auswählen</string>
+    <string name="select_image_wallpaper">Bild Wallpaper auswählen</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.graytsar.livewallpaper.route
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -26,13 +25,6 @@ fun SettingsScreenRoute(
         videoScalingOptions = videoScalingOptions,
         onDarkModeChange = { isEnabled ->
             viewModel.updateDarkMode(isEnabled = isEnabled)
-            AppCompatDelegate.setDefaultNightMode(
-                if (isEnabled) {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-            )
         },
         onImageOptionSelected = { option ->
             viewModel.updateImageScaleType(option)

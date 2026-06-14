@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.graytsar.livewallpaper.R
+import com.graytsar.livewallpaper.ui.theme.AppTheme
 
 @Composable
 fun PickerScreen(
@@ -72,14 +73,14 @@ fun PickerScreen(
                 PickerButton(
                     icon = R.drawable.ic_video_24,
                     text = R.string.video,
-                    contentDescription = "select a video wallpaper",
+                    contentDescription = stringResource(R.string.select_video_wallpaper),
                     onClick = onVideoClicked
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 PickerButton(
                     icon = R.drawable.ic_image_24,
                     text = R.string.image,
-                    contentDescription = "select an image wallpaper",
+                    contentDescription = stringResource(R.string.select_image_wallpaper),
                     onClick = onImageClicked
                 )
             }
@@ -119,7 +120,7 @@ private fun PickerButton(
 )
 @Composable
 fun PickerScreenPreview() {
-    MaterialTheme {
+    AppTheme {
         PickerScreen(
             snackbarHostState = remember { SnackbarHostState() },
             onVideoClicked = {},

@@ -16,12 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.graytsar.livewallpaper.R
 import com.graytsar.livewallpaper.core.common.model.ImageScaling
 import com.graytsar.livewallpaper.core.common.model.VideoScaling
+import com.graytsar.livewallpaper.ui.theme.AppTheme
 
 @Composable
 fun SettingsScreen(
@@ -71,7 +72,7 @@ fun SettingsScreen(
                     IconButton(onClick = onBackPress) {
                         Icon(
                             painter = painterResource(R.drawable.ic_all_arrow_back_24),
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
@@ -135,9 +136,9 @@ fun SettingsScreen(
                     isChecked = uiState.isPlayOffscreen,
                     onCheckedChange = onPlayOffscreenChange
                 )
-                Button(
+                FilledTonalButton(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = onClearWallpaperClick
+                    onClick = onClearWallpaperClick,
                 ) {
                     Text(text = stringResource(R.string.clear_wallpapers))
                 }
@@ -152,11 +153,13 @@ fun SettingsScreen(
 )
 @Composable
 fun SettingsScreenPreview() {
-    val uiState = SettingsUiState()
+    val uiState = SettingsUiState(
+        isDarkModeEnabled = true
+    )
     val imageScalingOptions = ImageScaling.entries
     val videoScalingOptions = VideoScaling.entries
 
-    MaterialTheme {
+    AppTheme {
         SettingsScreen(
             uiState = uiState,
             onBackPress = {
@@ -197,7 +200,8 @@ fun SettingsSectionHeader(
     Text(
         modifier = modifier,
         text = stringResource(titleRes),
-        style = MaterialTheme.typography.titleSmall
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary
     )
 }
 

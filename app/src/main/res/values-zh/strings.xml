@@ -20,4 +20,12 @@
     <string name="play_offscreen">屏幕外播放</string>
     <string name="summery_play_offscreen">屏幕不可见或关闭时继续播放</string>
     <string name="crop_video">裁剪视频</string>
+
+    <string name="clear_wallpapers">清除壁纸</string>
+    <string name="no_video_picker_app_found_on_this_device">在此设备上未找到视频选择应用。</string>
+    <string name="no_image_picker_app_found_on_this_device">在此设备上未找到图像选择应用。</string>
+    <string name="could_not_set_wallpaper">无法设置壁纸</string>
+    <string name="back">返回</string>
+    <string name="select_video_wallpaper">选择视频壁纸</string>
+    <string name="select_image_wallpaper">选择图像壁纸</string>
 </resources>

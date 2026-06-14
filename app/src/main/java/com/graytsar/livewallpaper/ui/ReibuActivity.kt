@@ -3,13 +3,15 @@
 package com.graytsar.livewallpaper.ui
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,16 +20,22 @@ import com.graytsar.livewallpaper.navigation.PickerRoute
 import com.graytsar.livewallpaper.navigation.SettingsRoute
 import com.graytsar.livewallpaper.route.PickerScreenRoute
 import com.graytsar.livewallpaper.route.SettingsScreenRoute
+import com.graytsar.livewallpaper.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ReibuActivity : AppCompatActivity() {
+class ReibuActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            AppTheme(darkTheme = uiState.isDarkModeEnabled) {
                 val navController = rememberNavController()
                 ReiActivityScreen(
                     navController = navController
@@ -63,7 +71,7 @@ fun ReiActivityScreen(
 @Composable
 fun ReiActivityScreenPreview() {
     val navController = rememberNavController()
-    MaterialTheme {
+    AppTheme {
         ReiActivityScreen(
             navController = navController
         )

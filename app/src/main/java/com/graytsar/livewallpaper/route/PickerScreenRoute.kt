@@ -1,5 +1,6 @@
 package com.graytsar.livewallpaper.route
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.WallpaperManager
 import android.content.ActivityNotFoundException
@@ -29,6 +30,7 @@ import com.graytsar.livewallpaper.ui.PickerScreen
 import com.graytsar.livewallpaper.ui.PickerViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun PickerScreenRoute(
     viewModel: PickerViewModel = hiltViewModel(),
@@ -97,7 +99,7 @@ fun PickerScreenRoute(
             } catch (_: ActivityNotFoundException) {
                 scope.launch {
                     snackbarHostState.showSnackbar(
-                        message = "No video picker app found on this device.",
+                        message = context.getString(R.string.no_video_picker_app_found_on_this_device),
                         duration = SnackbarDuration.Short
                     )
                 }
@@ -109,7 +111,7 @@ fun PickerScreenRoute(
             } catch (_: ActivityNotFoundException) {
                 scope.launch {
                     snackbarHostState.showSnackbar(
-                        message = "No image picker app found on this device.",
+                        message = context.getString(R.string.no_image_picker_app_found_on_this_device),
                         duration = SnackbarDuration.Short
                     )
                 }
@@ -165,6 +167,6 @@ private suspend fun launchWallpaperService(
             )
         })
     } catch (e: ActivityNotFoundException) {
-        onShowSnackbar("could not set wallpaper")
+        onShowSnackbar(context.getString(R.string.could_not_set_wallpaper))
     }
 }
