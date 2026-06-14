@@ -76,7 +76,7 @@ class FragmentPickerIntegrationTest {
         ActivityScenario.launch(ReibuActivity::class.java).use { scenario ->
             scenario.withPickerFragment { fragment ->
                 fragment.handlePickerEvent(
-                    ViewModelPicker.PickerEvent.Error(ViewModelPicker.PickerUiError.InvalidImage)
+                    PickerViewModel.PickerEvent.Error(PickerViewModel.PickerUiError.InvalidImage)
                 )
             }
 
@@ -95,7 +95,7 @@ class FragmentPickerIntegrationTest {
             ActivityScenario.launch(ReibuActivity::class.java).use { scenario ->
                 scenario.withPickerFragment { fragment ->
                     fragment.handlePickerEvent(
-                        ViewModelPicker.PickerEvent.LaunchWallpaperService(WallpaperServiceType.IMAGE)
+                        PickerViewModel.PickerEvent.LaunchWallpaperService(WallpaperServiceType.IMAGE)
                     )
                 }
 
@@ -122,7 +122,7 @@ class FragmentPickerIntegrationTest {
             ActivityScenario.launch(ReibuActivity::class.java).use { scenario ->
                 scenario.withPickerFragment { fragment ->
                     fragment.handlePickerEvent(
-                        ViewModelPicker.PickerEvent.LaunchWallpaperService(WallpaperServiceType.VIDEO)
+                        PickerViewModel.PickerEvent.LaunchWallpaperService(WallpaperServiceType.VIDEO)
                     )
                 }
 
@@ -138,12 +138,12 @@ class FragmentPickerIntegrationTest {
         }
     }
 
-    private fun ActivityScenario<ReibuActivity>.withPickerFragment(action: (FragmentPicker) -> Unit) {
+    private fun ActivityScenario<ReibuActivity>.withPickerFragment(action: (PickerFragment) -> Unit) {
         onActivity { activity ->
             val navHostFragment =
                 activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val fragment = navHostFragment.childFragmentManager.fragments
-                .filterIsInstance<FragmentPicker>()
+                .filterIsInstance<PickerFragment>()
                 .first()
             action(fragment)
         }

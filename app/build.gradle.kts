@@ -91,6 +91,8 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.compose.foundation.layout)
     implementation(libs.compose.material3)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.hilt.navigation)
     ksp(libs.kotlin.metadata.jvm)
 
     //datastore

@@ -20,7 +20,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 import java.io.File
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ViewModelPickerTest {
+class PickerViewModelTest {
 
     @JvmField
     @RegisterExtension
@@ -31,7 +31,7 @@ class ViewModelPickerTest {
     private val cleanupMediaUseCase = mockk<CleanupMediaUseCase>()
     private val pickerSelectionStore = mockk<PickerSelectionStore>(relaxed = true)
 
-    private val viewModel = ViewModelPicker(
+    private val viewModel = PickerViewModel(
         validateMediaUseCase = validateMediaUseCase,
         importMediaUseCase = importMediaUseCase,
         cleanupMediaUseCase = cleanupMediaUseCase,
@@ -50,7 +50,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.IMAGE)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.LaunchWallpaperService(
+            awaitItem() shouldBe PickerViewModel.PickerEvent.LaunchWallpaperService(
                 WallpaperServiceType.IMAGE
             )
 
@@ -74,7 +74,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.VIDEO)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.LaunchWallpaperService(
+            awaitItem() shouldBe PickerViewModel.PickerEvent.LaunchWallpaperService(
                 WallpaperServiceType.VIDEO
             )
 
@@ -95,7 +95,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.IMAGE)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.Error(ViewModelPicker.PickerUiError.InvalidImage)
+            awaitItem() shouldBe PickerViewModel.PickerEvent.Error(PickerViewModel.PickerUiError.InvalidImage)
 
             coVerify(exactly = 1) { validateMediaUseCase.validateImage(uri) }
             coVerify(exactly = 0) { validateMediaUseCase.validateVideo(any()) }
@@ -115,7 +115,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.VIDEO)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.Error(ViewModelPicker.PickerUiError.InvalidVideo)
+            awaitItem() shouldBe PickerViewModel.PickerEvent.Error(PickerViewModel.PickerUiError.InvalidVideo)
 
             coVerify(exactly = 1) { validateMediaUseCase.validateVideo(uri) }
             coVerify(exactly = 0) { validateMediaUseCase.validateImage(any()) }
@@ -136,7 +136,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.IMAGE)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.Error(ViewModelPicker.PickerUiError.Import)
+            awaitItem() shouldBe PickerViewModel.PickerEvent.Error(PickerViewModel.PickerUiError.Import)
 
             coVerify(exactly = 1) { validateMediaUseCase.validateImage(uri) }
             coVerify(exactly = 0) { validateMediaUseCase.validateVideo(any()) }
@@ -157,7 +157,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.IMAGE)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.Error(ViewModelPicker.PickerUiError.Import)
+            awaitItem() shouldBe PickerViewModel.PickerEvent.Error(PickerViewModel.PickerUiError.Import)
 
             coVerify(exactly = 1) { validateMediaUseCase.validateImage(uri) }
             coVerify(exactly = 0) { validateMediaUseCase.validateVideo(any()) }
@@ -176,7 +176,7 @@ class ViewModelPickerTest {
             viewModel.onMediaSelected(uri, WallpaperType.NONE)
             advanceUntilIdle()
 
-            awaitItem() shouldBe ViewModelPicker.PickerEvent.Error(ViewModelPicker.PickerUiError.Import)
+            awaitItem() shouldBe PickerViewModel.PickerEvent.Error(PickerViewModel.PickerUiError.Import)
 
             coVerify(exactly = 0) { validateMediaUseCase.validateImage(any()) }
             coVerify(exactly = 0) { validateMediaUseCase.validateVideo(any()) }

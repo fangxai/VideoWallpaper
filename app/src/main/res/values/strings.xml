@@ -24,4 +24,5 @@
     <string name="play_offscreen">Play off screen</string>
     <string name="summery_play_offscreen">Play when not visible or screen is off</string>
     <string name="crop_video">Crop video</string>
+    <string name="clear_wallpapers">Clear wallpapers</string>
 </resources>

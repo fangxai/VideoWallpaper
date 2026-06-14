@@ -130,6 +130,19 @@ class UserPreferencesRepository(
         }.distinctUntilChanged()
     }
 
+    fun getSettingOptions(): Flow<SettingOptions> {
+        return dataStore.data.map { data ->
+            SettingOptions(
+                darkMode = data.appPreference.forceDarkMode,
+                imageScaleType = data.imagePreference.scaling.toDomain(),
+                enableAudio = data.videoPreference.isAudioEnabled,
+                videoScaleType = data.videoPreference.scaling.toDomain(),
+                doubleTapToPause = data.generalPreference.isDoubleTapToPauseEnabled,
+                playOffscreen = data.generalPreference.isPlayOffscreenEnabled
+            )
+        }
+    }
+
     suspend fun promotePreviewSelectionToWallpaper(flag: WallpaperFlag) = update { data ->
         val previewSelection = data.previewPreference
         if (previewSelection.toSelection() == null) {
@@ -169,4 +182,13 @@ data class WallpaperSelection(
     val path: String,
     val type: WallpaperType,
     val service: WallpaperServiceType
+)
+
+data class SettingOptions(
+    val darkMode: Boolean,
+    val imageScaleType: ImageScaling,
+    val enableAudio: Boolean,
+    val videoScaleType: VideoScaling,
+    val doubleTapToPause: Boolean,
+    val playOffscreen: Boolean
 )

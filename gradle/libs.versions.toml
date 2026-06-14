@@ -54,6 +54,8 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" } #pre
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" } #basic components like Row, Column, Box, etc.
 compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" } #components that require additional dependencies, such as LazyColumn, LazyRow, etc.
 compose-material3 = { group = "androidx.compose.material3", name = "material3" } #Material Design 3 components
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" } #compose naviation
+compose-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltCompiler" } #compose naviation with hilt
 #ads
 play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
 #kotlin
