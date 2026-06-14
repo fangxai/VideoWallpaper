@@ -1,16 +1,23 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.graytsar.livewallpaper.ui
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import com.graytsar.livewallpaper.R
-import com.graytsar.livewallpaper.core.common.util.applyWindowInsets
-import com.graytsar.livewallpaper.databinding.ActivityRaibuBinding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.graytsar.livewallpaper.navigation.PickerRoute
+import com.graytsar.livewallpaper.navigation.SettingsRoute
+import com.graytsar.livewallpaper.route.PickerScreenRoute
+import com.graytsar.livewallpaper.route.SettingsScreenRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,23 +26,46 @@ class ReibuActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityRaibuBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val toolbar: Toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentMain))
-
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-
-        applyWindowInsets(binding.root)
+        setContent {
+            MaterialTheme {
+                val navController = rememberNavController()
+                ReiActivityScreen(
+                    navController = navController
+                )
+            }
+        }
     }
+}
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp() || super.onSupportNavigateUp()
+@Composable
+fun ReiActivityScreen(
+    navController: NavHostController
+) {
+    NavHost(
+        navController = navController,
+        startDestination = PickerRoute
+    ) {
+        composable<PickerRoute> {
+            PickerScreenRoute(
+                onSettingsClick = { navController.navigate(SettingsRoute) }
+            )
+        }
+
+        composable<SettingsRoute> {
+            SettingsScreenRoute(
+                onBackPress = { navController.popBackStack() }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ReiActivityScreenPreview() {
+    val navController = rememberNavController()
+    MaterialTheme {
+        ReiActivityScreen(
+            navController = navController
+        )
     }
 }
